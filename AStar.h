@@ -16,6 +16,8 @@ class ASart
 	int Step = 0;
 	int Cost = 0;
 
+	int EstimatePower = 1; // 预算权重
+
 
 	private:
 		struct Dot
@@ -60,31 +62,35 @@ class ASart
 			}
 
 			bool operator > (const Dot& dot) {
-				return Step > dot.Step;
+				return Estimate > dot.Estimate;
 			}
 			bool operator == (const Dot* dot) {
 				return this == dot;
 			}
 			bool operator < (const Dot& dot) {
-				return Step < dot.Step;
+				return Estimate < dot.Estimate;
 			}
 			friend ostream& operator<<(ostream& stream, const Dot& dot)
 			{
-				stream << dot.Step << " ";
+				stream << dot.Step << "," << dot.Estimate;
 				return stream;
 			}
 			friend ostream& operator<<(ostream& stream, const Dot* dot)
 			{
-				stream << dot->Step << " ";
+				stream << dot->Step << "," << dot->Estimate;
 				return stream;
 			}
-			void SetStep(int step)
+			void SetStep(int step, int distanceToEnd)
 			{
 				State = 1;
 				Step = step;
+				Estimate = step + distanceToEnd;
 			}
 
-			int Step = 10; // 记录预算  之前的 + Cost
+			int Step = 10; // 记录预算，之前的 + Cost
+			// 总预算，需要记录到终点的距离 + Step；
+			// 计算的权重越大，算法速度越快，但最短距离的概率越低；
+			int Estimate = 0; 
 		};
 
 		vector<vector<Dot*>> Map;
@@ -92,6 +98,8 @@ class ASart
 
 	public:
 		ASart(int row, int line);
+		int CalDistanceToEnd(int row, int line);
+		void SetEstimatePower(int power);
 		void SetStart(int row, int line);
 		void SetEnd(int row, int line);
 		void Find();

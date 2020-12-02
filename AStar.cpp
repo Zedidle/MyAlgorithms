@@ -29,7 +29,7 @@ ASart::ASart(int row, int line) :Row(row), Line(line)
 				{
 					// 平原区
 					PlainFactor = 10;
-					CostFactor = 3;
+					CostFactor = 2;
 				}
 				cost = (rand() % PlainFactor) ? (rand() % CostFactor + CostFactor / 3) : 10;
 			}
@@ -38,6 +38,16 @@ ASart::ASart(int row, int line) :Row(row), Line(line)
 		Map.push_back(m);
 	}
 	SetStart(0, 0);
+}
+
+int ASart::CalDistanceToEnd(int row, int line)
+{
+	return abs(row - EndX) + abs(line - EndY);
+}
+
+void ASart::SetEstimatePower(int power)
+{
+	EstimatePower = power;
 }
 
 void ASart::SetStart(int row, int line)
@@ -77,25 +87,25 @@ void ASart::Find()
 		Map[curX][curY]->State = 2;
 		if (curX - 1 >= 0 && (dot = Map[curX - 1][curY]) && dot->State == 0 && dot->Cost < 10)
 		{
-			dot->SetStep(CurStep + dot->Cost);
+			dot->SetStep(CurStep + dot->Cost, EstimatePower * CalDistanceToEnd(curX - 1, curY));
 			dot->PreDot = Map[curX][curY];
 			Open->Insert(dot);
 		}
 		if (curX + 1 < Row && (dot = Map[curX + 1][curY]) && dot->State == 0 && dot->Cost < 10)
 		{
-			dot->SetStep(CurStep + dot->Cost);
+			dot->SetStep(CurStep + dot->Cost, EstimatePower * CalDistanceToEnd(curX + 1, curY));
 			dot->PreDot = Map[curX][curY];
 			Open->Insert(dot);
 		}
 		if (curY - 1 >= 0 && (dot = Map[curX][curY - 1]) && dot->State == 0 && dot->Cost < 10)
 		{
-			dot->SetStep(CurStep + dot->Cost);
+			dot->SetStep(CurStep + dot->Cost, EstimatePower * CalDistanceToEnd(curX, curY-1));
 			dot->PreDot = Map[curX][curY];
 			Open->Insert(dot);
 		}
 		if (curY + 1 < Line && (dot = Map[curX][curY + 1]) && dot->State == 0 && dot->Cost < 10)
 		{
-			dot->SetStep(CurStep + dot->Cost);
+			dot->SetStep(CurStep + dot->Cost, EstimatePower * CalDistanceToEnd(curX, curY+1));
 			dot->PreDot = Map[curX][curY];
 			Open->Insert(dot);
 		}
@@ -107,12 +117,12 @@ void ASart::Find()
 			curX = Open->GetMin()->X;
 			curY = Open->GetMin()->Y;
 			Open->Remove(Open->GetMin());
-			++Step;
 			Sleep(50);
 			system("cls");
-			cout << "预备可行位置的消耗：";
-			Open->PreOrder();
-			//cout << "探索步数：" << Step << endl;
+			//cout << "预备可行位置的消耗：";
+			//Open->PreOrder();
+			++Step;
+			cout << "探索步数：" << Step << endl;
 			//cout << "当前位置：" << Open->GetMin()->GetPos() << endl;
 			ShowMap();
 	}
@@ -161,11 +171,12 @@ void ASart::ShowRoute(int row, int line)
 void ASart_Test()
 {
 	int row = 10;
-	int line = 20;
+	int line = 30;
 
 	ASart* aSart = new ASart(row, line);
 	aSart->SetStart(0, 0);
 	aSart->SetEnd(row-1, line-1);
+	aSart->SetEstimatePower(10);
 	aSart->Find();
 
 
