@@ -70,36 +70,34 @@ void ASart::Find()
 	int CurStep = 0;
 	Open = new BTree<Dot>(new Dot(curX, curY));
 
-
+	Dot* dot = nullptr;
 	while (!(curX == EndX && curY == EndY))
 	{
-		Sleep(1);
-		ShowMap();
-		Map[curX][curY]->State = 2;
 
-		if (curX - 1 >= 0 && Map[curX - 1][curY]->State == 0 && Map[curX - 1][curY]->Cost < 10)
+		Map[curX][curY]->State = 2;
+		if (curX - 1 >= 0 && (dot = Map[curX - 1][curY]) && dot->State == 0 && dot->Cost < 10)
 		{
-			Map[curX - 1][curY]->SetStep(CurStep + Map[curX - 1][curY]->Cost);
-			Map[curX - 1][curY]->PreDot = Map[curX][curY];
-			Open->Insert(Map[curX - 1][curY]);
+			dot->SetStep(CurStep + dot->Cost);
+			dot->PreDot = Map[curX][curY];
+			Open->Insert(dot);
 		}
-		if (curX + 1 < Row && Map[curX + 1][curY]->State == 0 && Map[curX + 1][curY]->Cost < 10)
+		if (curX + 1 < Row && (dot = Map[curX + 1][curY]) && dot->State == 0 && dot->Cost < 10)
 		{
-			Map[curX + 1][curY]->SetStep(CurStep + Map[curX + 1][curY]->Cost);
-			Map[curX + 1][curY]->PreDot = Map[curX][curY];
-			Open->Insert(Map[curX + 1][curY]);
+			dot->SetStep(CurStep + dot->Cost);
+			dot->PreDot = Map[curX][curY];
+			Open->Insert(dot);
 		}
-		if (curY - 1 >= 0 && Map[curX][curY - 1]->State == 0 && Map[curX][curY-1]->Cost < 10)
+		if (curY - 1 >= 0 && (dot = Map[curX][curY - 1]) && dot->State == 0 && dot->Cost < 10)
 		{
-			Map[curX][curY - 1]->SetStep(CurStep + Map[curX][curY - 1]->Cost);
-			Map[curX][curY - 1]->PreDot = Map[curX][curY];
-			Open->Insert(Map[curX][curY - 1]);
+			dot->SetStep(CurStep + dot->Cost);
+			dot->PreDot = Map[curX][curY];
+			Open->Insert(dot);
 		}
-		if (curY + 1 < Line && Map[curX][curY + 1]->State == 0 && Map[curX][curY + 1]->Cost < 10)
+		if (curY + 1 < Line && (dot = Map[curX][curY + 1]) && dot->State == 0 && dot->Cost < 10)
 		{
-			Map[curX][curY + 1]->SetStep(CurStep + Map[curX][curY + 1]->Cost);
-			Map[curX][curY + 1]->PreDot = Map[curX][curY];
-			Open->Insert(Map[curX][curY + 1]);
+			dot->SetStep(CurStep + dot->Cost);
+			dot->PreDot = Map[curX][curY];
+			Open->Insert(dot);
 		}
 
 
@@ -108,26 +106,29 @@ void ASart::Find()
 			CurStep = Open->GetMin()->Step;
 			curX = Open->GetMin()->X;
 			curY = Open->GetMin()->Y;
-			++Step;
-			//cout << "预备可行位置的消耗：";
-			//Open->PreOrder();
-			cout << "探索步数：" << Step << endl;
-			cout << "当前位置：" << Open->GetMin()->GetPos() << endl;
 			Open->Remove(Open->GetMin());
-		}
+			++Step;
+			Sleep(50);
+			system("cls");
+			cout << "预备可行位置的消耗：";
+			Open->PreOrder();
+			//cout << "探索步数：" << Step << endl;
+			//cout << "当前位置：" << Open->GetMin()->GetPos() << endl;
+			ShowMap();
+	}
 		else
 		{
 			cout << "没法抵达" << endl;
 			break;
 		}
 	}
+	dot = nullptr;
+	delete dot;
 	ShowRoute(curX, curY);
-	
 }
 
 void ASart::ShowMap()
 {
-	system("cls");
 	cout << endl;
 	for (int i = 0; i < Row; ++i)
 	{
@@ -160,7 +161,7 @@ void ASart::ShowRoute(int row, int line)
 void ASart_Test()
 {
 	int row = 10;
-	int line = 60;
+	int line = 20;
 
 	ASart* aSart = new ASart(row, line);
 	aSart->SetStart(0, 0);

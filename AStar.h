@@ -6,7 +6,7 @@
 #include "BTree.h"
 using namespace std;
 
-
+// 关键在于地图点 Dot 及其容器的设计
 class ASart
 {
 	int Row, Line;
