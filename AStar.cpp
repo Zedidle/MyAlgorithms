@@ -176,7 +176,7 @@ void ASart_Test()
 	ASart* aSart = new ASart(row, line);
 	aSart->SetStart(0, 0);
 	aSart->SetEnd(row-1, line-1);
-	aSart->SetEstimatePower(10);
+	aSart->SetEstimatePower(3);
 	aSart->Find();
 
 

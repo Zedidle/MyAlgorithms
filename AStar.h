@@ -16,7 +16,7 @@ class ASart
 	int Step = 0;
 	int Cost = 0;
 
-	int EstimatePower = 1; // 预算权重
+	int EstimatePower = 1; // 预算权重; 数值越大，算法越快，但越偏离最短路径
 
 
 	private:

@@ -8,12 +8,13 @@ using namespace std;
 
 int main(void)
 {
-	//Sort::Test();
-
+	Sort_Test();
 	//BinaryTree_Test();
-
 	//BTree_Test();
-	ASart_Test();
+	//ASart_Test();
+
+
+
 
 	system("pause");
 	return 0;
