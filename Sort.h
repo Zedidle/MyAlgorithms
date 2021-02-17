@@ -12,7 +12,7 @@
 
 void Sort_Test()
 {
-	int N = 100;
+	int N = 50;
 	vector<int> arr;
 	vector<int> temp(N); // 需要实现分配空间
 	for (int i = 0; i < N; ++i)
